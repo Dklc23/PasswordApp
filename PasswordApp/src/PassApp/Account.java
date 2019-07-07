@@ -17,7 +17,7 @@ import java.util.Optional;
             this.User = user;
             this.Salt = generateSalt(20);
             String pass = new String(password);
-            this.Hash = (String) generateHash(pass, this.Salt);
+            this.Hash =  generateHash(pass, this.Salt);
 
         }
 
@@ -32,10 +32,11 @@ import java.util.Optional;
             return Optional.of(Base64.getEncoder().encodeToString(salt));
         }
 
-        private String generateHash(String password, Optional<String> salt) throws NoSuchAlgorithmException {
+        private  String generateHash(String password, Optional<String> salt) throws NoSuchAlgorithmException {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
-          byte[] hash = digest.digest(password.getBytes());
+            String pass = password + salt;
+          byte[] hash = digest.digest(pass.getBytes());
         return   bytesToHex(hash);
 
 
@@ -43,7 +44,7 @@ import java.util.Optional;
 
         }
         private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-        public static String bytesToHex(byte[] bytes) {
+        private static String bytesToHex(byte[] bytes) {
             char[] hexChars = new char[bytes.length * 2];
             for (int j = 0; j < bytes.length; j++) {
                 int v = bytes[j] & 0xFF;
